@@ -220,33 +220,13 @@ new_window(struct swc_window *swc)
 
 const struct swc_manager manager = { &new_screen, &new_window };
 
-void
-spawn(void *data, uint32_t time, uint32_t value, uint32_t state)
-{
-	char *const *command = data;
-
-	if (state != WL_KEYBOARD_KEY_STATE_PRESSED)
-		return;
-
-	if (fork() == 0) {
-		execvp(command[0], command);
-		exit(EXIT_FAILURE);
-	}
-}
-
-void
-quit(void *data, uint32_t time, uint32_t value, uint32_t state)
-{
-	if (state != WL_KEYBOARD_KEY_STATE_PRESSED)
-		return;
-
-	wl_display_terminate(display);
-}
-
 extern void call_callback(void *ptr);
 
 void
 execute_binding_callback(void *data, uint32_t time, uint32_t value,uint32_t state)
 {
+	if (state != WL_KEYBOARD_KEY_STATE_PRESSED)
+		return;
+
 	call_callback(data);
 }
