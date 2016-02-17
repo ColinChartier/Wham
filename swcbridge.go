@@ -11,8 +11,6 @@ import (
 	"os/exec"
 )
 
-var terminal_command = [...]*C.char {C.CString("st"), nil}
-
 func AddKeyBinding(modifiers,value int, callback func()) {
 	C.swc_add_binding(C.SWC_BINDING_KEY, C.uint32_t(modifiers), C.uint32_t(value), C.swc_binding_handler(unsafe.Pointer(C.execute_binding_callback)), unsafe.Pointer(&callback))
 }
