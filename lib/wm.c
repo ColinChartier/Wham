@@ -39,7 +39,7 @@ struct window {
 	struct wl_list link;
 };
 
-static const char *terminal_command[] = { "st", NULL };
+const char *terminal_command[] = { "st", NULL };
 static const char *dmenu_command[] = { "dmenu_run-wl", NULL };
 static const uint32_t border_width = 1;
 static const uint32_t border_color_active = 0xff333388;
@@ -47,8 +47,8 @@ static const uint32_t border_color_normal = 0xff888888;
 
 static struct screen *active_screen;
 static struct window *focused_window;
-static struct wl_display *display;
-static struct wl_event_loop *event_loop;
+struct wl_display *display;
+//static struct wl_event_loop *event_loop;
 
 /* This is a basic grid arrange function that tries to give each window an
  * equal space. */
@@ -223,7 +223,7 @@ new_window(struct swc_window *swc)
 
 const struct swc_manager manager = { &new_screen, &new_window };
 
-static void
+void
 spawn(void *data, uint32_t time, uint32_t value, uint32_t state)
 {
 	char *const *command = data;
@@ -237,7 +237,7 @@ spawn(void *data, uint32_t time, uint32_t value, uint32_t state)
 	}
 }
 
-static void
+void
 quit(void *data, uint32_t time, uint32_t value, uint32_t state)
 {
 	if (state != WL_KEYBOARD_KEY_STATE_PRESSED)
@@ -259,16 +259,16 @@ int wololo()
 	if (!swc_initialize(display, NULL, &manager))
 		return EXIT_FAILURE;
 
-	swc_add_binding(SWC_BINDING_KEY, SWC_MOD_LOGO, XKB_KEY_Return,
-	                &spawn, terminal_command);
-	swc_add_binding(SWC_BINDING_KEY, SWC_MOD_LOGO, XKB_KEY_r,
-	                &spawn, dmenu_command);
-	swc_add_binding(SWC_BINDING_KEY, SWC_MOD_LOGO, XKB_KEY_q,
-	                &quit, NULL);
+	// swc_add_binding(SWC_BINDING_KEY, SWC_MOD_LOGO, XKB_KEY_Return,
+	//                &spawn, terminal_command);
+	// swc_add_binding(SWC_BINDING_KEY, SWC_MOD_LOGO, XKB_KEY_r,
+	//                &spawn, dmenu_command);
+	// swc_add_binding(SWC_BINDING_KEY, SWC_MOD_LOGO, XKB_KEY_q,
+	//                &quit, NULL);
 
-	event_loop = wl_display_get_event_loop(display);
-	wl_display_run(display);
-	wl_display_destroy(display);
+	//event_loop = wl_display_get_event_loop(display);
+	//wl_display_run(display);
+	//wl_display_destroy(display);
 
 	return EXIT_SUCCESS;
 }
