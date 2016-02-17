@@ -39,8 +39,6 @@ struct window {
 	struct wl_list link;
 };
 
-const char *terminal_command[] = { "st", NULL };
-static const char *dmenu_command[] = { "dmenu_run-wl", NULL };
 static const uint32_t border_width = 1;
 static const uint32_t border_color_active = 0xff333388;
 static const uint32_t border_color_normal = 0xff888888;
@@ -48,7 +46,6 @@ static const uint32_t border_color_normal = 0xff888888;
 static struct screen *active_screen;
 static struct window *focused_window;
 struct wl_display *display;
-//static struct wl_event_loop *event_loop;
 
 /* This is a basic grid arrange function that tries to give each window an
  * equal space. */
@@ -246,29 +243,3 @@ quit(void *data, uint32_t time, uint32_t value, uint32_t state)
 	wl_display_terminate(display);
 }
 
-int wololo()
-{
-	display = wl_display_create();
-
-	if (!display)
-		return EXIT_FAILURE;
-
-	if (wl_display_add_socket(display, NULL) != 0)
-		return EXIT_FAILURE;
-
-	if (!swc_initialize(display, NULL, &manager))
-		return EXIT_FAILURE;
-
-	// swc_add_binding(SWC_BINDING_KEY, SWC_MOD_LOGO, XKB_KEY_Return,
-	//                &spawn, terminal_command);
-	// swc_add_binding(SWC_BINDING_KEY, SWC_MOD_LOGO, XKB_KEY_r,
-	//                &spawn, dmenu_command);
-	// swc_add_binding(SWC_BINDING_KEY, SWC_MOD_LOGO, XKB_KEY_q,
-	//                &quit, NULL);
-
-	//event_loop = wl_display_get_event_loop(display);
-	//wl_display_run(display);
-	//wl_display_destroy(display);
-
-	return EXIT_SUCCESS;
-}

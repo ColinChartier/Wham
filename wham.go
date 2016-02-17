@@ -22,6 +22,18 @@ func AddKeyBinding(modifiers,value int, callback,data unsafe.Pointer) {
 	C.swc_add_binding(C.SWC_BINDING_KEY, C.uint32_t(modifiers), C.uint32_t(value), C.swc_binding_handler(callback), data)
 }
 
+type StackingType int
+const (
+	HORIZONTAL StackingType = 0
+	VERTICAL
+	TABBED
+)
+
+type Container struct {
+	values []Container
+	orientation StackingType
+}
+
 func main() {
 	display := C.wl_display_create()
 	if display == nil {
@@ -35,7 +47,7 @@ func main() {
 	}
 	C.display = display
 	AddKeyBinding(C.SWC_MOD_LOGO, C.XKB_KEY_Return, unsafe.Pointer(C.spawn), unsafe.Pointer(&terminal_command))
-	AddKeyBinding(C.SWC_MOD_LOGO, C.XKB_KEY_q, unsafe.Pointer(C.quit), nil)
+	AddKeyBinding(C.SWC_MOD_LOGO, C.XKB_KEY_x, unsafe.Pointer(C.quit), nil)
 	//event_loop := C.wl_display_get_event_loop(display)
 	C.wl_display_run(display)
 	C.wl_display_destroy(display)
