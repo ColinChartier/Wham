@@ -1,6 +1,6 @@
 package main
 
-// #cgo LDFLAGS: -L./lib/ -lswc -lwayland-server -lm
+// #cgo LDFLAGS: -L./lib/ -L./wrapper -lswc -lwayland-server -lm
 // #include "lib/wm.c"
 // #include <swc.h>
 // #include <wayland-server.h>
@@ -8,12 +8,17 @@ import "C"
 
 import (
 	"unsafe"
+	"os/exec"
 )
 
 var terminal_command = [...]*C.char {C.CString("st"), nil}
 
 func AddKeyBinding(modifiers,value int, callback,data unsafe.Pointer) {
 	C.swc_add_binding(C.SWC_BINDING_KEY, C.uint32_t(modifiers), C.uint32_t(value), C.swc_binding_handler(callback), data)
+}
+
+func AddKeyBinding2(modifiers,value int, callback func()) {
+	C.swc_add_binding(C.SWC_BINDING_KEY, C.uint32_t(modifiers), C.uint32_t(value), C.swc_binding_handler(unsafe.Pointer(C.execute_binding_callback)), unsafe.Pointer(&callback))
 }
 
 type StackingType int
@@ -60,12 +65,23 @@ func RunDisplay(display Display) {
 	C.wl_display_run((*C.struct_wl_display)(display))
 }
 
+func TerminateDisplay(display Display) {
+	C.wl_display_terminate((*C.struct_wl_display)(display))
+}
+
 func DestroyDisplay(display Display) {
 	C.wl_display_destroy((*C.struct_wl_display)(display))
+}
+
+func test() {
+	//C.wl_display_terminate(C.display)
+	cmd := exec.Command("st")
+	cmd.Start()
 }
 
 func AddDebugKeyBindings() {
 	AddKeyBinding(C.SWC_MOD_LOGO, C.XKB_KEY_Return, unsafe.Pointer(C.spawn), unsafe.Pointer(&terminal_command))
 	AddKeyBinding(C.SWC_MOD_LOGO, C.XKB_KEY_x, unsafe.Pointer(C.quit), nil)
+	AddKeyBinding2(C.SWC_MOD_LOGO, C.XKB_KEY_w, test)
 	//event_loop := C.wl_display_get_event_loop((*wl_display)display)
 }

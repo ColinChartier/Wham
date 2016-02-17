@@ -243,3 +243,10 @@ quit(void *data, uint32_t time, uint32_t value, uint32_t state)
 	wl_display_terminate(display);
 }
 
+extern void call_callback(void *ptr);
+
+void
+execute_binding_callback(void *data, uint32_t time, uint32_t value,uint32_t state)
+{
+	call_callback(data);
+}
